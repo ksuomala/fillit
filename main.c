@@ -6,7 +6,7 @@
 /*   By: ksuomala <ksuomala@student.hive.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/29 17:38:50 by ksuomala          #+#    #+#             */
-/*   Updated: 2020/07/31 16:25:52 by ksuomala         ###   ########.fr       */
+/*   Updated: 2020/08/03 18:05:30 by ksuomala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,58 +63,61 @@ int			ft_listcmp(int y, int x, t_tet *crd)
 	while (i < 4)
 	{
 		if (crd->x[i] == x && crd->y[i] == y)
+		{
+			ft_putendl("already saved");
 			return (1);
+		}
 		i++;
 	}
 	return (0);
 }
 
-void			ft_savehsh(int y, int x, t_tet *crd)
+int			ft_savehsh(int y, int x, t_tet *crd)
 {
 	int i;
 
 	i = crd->count;
+	if (i > 3)
+		return (0);
 	crd->y[i] = y;
 	crd->x[i] = x;
 	crd->count++;
+	return (1);
 }
 
 int			ft_isvalid(char **tet, int y, int x, t_tet *crd)
 {
-	ft_savehsh(y, x, crd);
-	if (tet[y][x + 1] == '#')
-	{
+	if (!ft_savehsh(y, x, crd))
+		return (0);
+	if (x < 4 && tet[y][x + 1] == '#')
 		if (!ft_listcmp(y, x + 1, crd))
 			if (!ft_isvalid(tet, y, x + 1, crd))
 				return (0);
-	}
 	if (x > 0 && tet[y][x - 1] == '#')
-	{
 		if (!ft_listcmp(y, x - 1, crd))
 			if (!ft_isvalid(tet, y, x - 1, crd))
 				return (0);
-	}
-	if (y > 0 && tet[y - 1][x] == '#')
-	{
+	if (y > 3 && tet[y - 1][x] == '#')
 		if (!ft_listcmp(y - 1, x, crd))
 			if (!ft_isvalid(tet, y - 1, x, crd))
 				return (0);
-	}
-	if (tet[y + 1][x] == '#')
-	{
+	if (y < 3 && tet[y + 1][x] == '#')
 		if (!ft_listcmp(y + 1, x, crd))
 			if (!ft_isvalid(tet, y + 1, x, crd))
 				return (0);
-	}
 	return (1);
 }
 
-int			ft_hashcount(char **arr)
+int			ft_hashcount(char **arr, t_tet *head)
 {
 	int x;
 	int y;
 	int count;
 
+	while (head->next)
+		head = head->next;
+	if (head->count != 4)
+		return (0);
 	x = 0;
 	y = 0;
 	count = 0;
@@ -130,10 +133,7 @@ int			ft_hashcount(char **arr)
 		y++;
 	}
 	if (count != 4)
-	{
-		ft_putendl("your grid is full of hash bro");
 		return (0);
-	}
 	return (1);
 }
 
@@ -142,27 +142,26 @@ t_tet		*ft_coordinates(char **tet, t_tet *head)
 	t_tet		*last;
 	size_t		x;
 	size_t		y;
-	int			chr;
 
-	chr = 0;
 	x = 0;
 	y = 0;
 	head = ft_createnode(head);
 	last = head;
 	while (last->next)
 		last = last->next;
-	while (y < 4 && chr == 0)
+	while (y < 4)
 	{
-		while (x < 4 && chr == 0)
+		while (x < 4)
 		{
 			if (tet[y][x] == '#')
-				chr = ft_isvalid(tet, y, x, last);
+				if (ft_isvalid(tet, y, x, last))
+					break ;
 			x++;
 		}
 		x = 0;
 		y++;
 	}
-	if (chr && ft_hashcount(tet))
+	if (ft_hashcount(tet, head))
 		return (head);
 	return (NULL);
 }
@@ -212,9 +211,8 @@ t_tet		*ft_read(int fd)
 	i = 0;
 	if (!(n = read(fd, &line, 21)))
 		return (head);
-	if (n < 21)
-		return (NULL);
-	if (line[19] != '\n')
+	if ((n != 21 && n != 20) || line[4] != '\n' || line[9] != '\n'\
+	|| line[14] != '\n' || line[19] != '\n')
 		return (NULL);
 	line[19] = '\0';
 	n = 0;
@@ -250,9 +248,11 @@ int			main(int ac, char **av)
 	ft_putchar(mino->print);
 	ft_putchar(mino->next->print);
 	ft_putchar(mino->next->next->print);
+	ft_putchar(mino->next->next->next->print);
 	ft_putnbr(mino->y[1]);
 	ft_putnbr(mino->next->y[1]);
 	ft_putnbr(mino->next->next->y[1]);
+	ft_putnbr(mino->next->next->next->y[1]);
 	i = 0;
 	return (0);
 }
