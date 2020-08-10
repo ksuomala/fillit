@@ -6,7 +6,7 @@
 /*   By: ksuomala <ksuomala@student.hive.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/29 17:38:50 by ksuomala          #+#    #+#             */
-/*   Updated: 2020/08/10 21:06:37 by ksuomala         ###   ########.fr       */
+/*   Updated: 2020/08/10 21:37:10 by ksuomala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,14 @@
 **		error because it
 **		checks that read returns 21. Check that [20] is a newline and that there is no extra nl at end of file.f
 **
-**		Put tetrimino coordinates to the upper left corner.
-**		Create smallest possible grid (sqrt(n of tet * 4).
+**
+**		Create smallest possible grid (sqrt(n of tet * 4). We need listlen.
 **		Place A to the most upper left position.
-** 		Move B to the right side of A. If it doesn't fit, increment y.
+** 		Move B to the right side of A. If it doesn't fit, increment y. We need move right and move down functions.
+**		while (x != .) >> x++; , if ((x[i] + x) == .)
 */
+
+
 
 t_tet		*ft_createnode(t_tet *head)
 {
@@ -68,10 +71,6 @@ int			ft_listcmp(int y, int x, t_tet *crd)
 	{
 		if (crd->x[i] == (x - crd->min_x) && crd->y[i] == (y - crd->min_y))
 		{
-			ft_putstr("already saved ");
-			ft_putnbr(y);
-			ft_putnbr(x);
-			ft_n(1);
 			return (1);
 		}
 		i++;
@@ -84,23 +83,15 @@ int			ft_savehsh(int y, int x, t_tet *crd, char **tet)
 	int i;
 	int a;
 
-	ft_putstr("savehsh");
-	ft_putnbr(y);
-	ft_putnbr(x);
-	if (crd->count)
-	{
-		ft_putnbr(crd->min_y);
-		ft_putnbr(crd->min_x);
-	}
-	ft_n(1);
+
 	i = crd->count;
 	if (i > 3)
 	{
-		ft_putnbr(crd->min_y);
+/*		ft_putnbr(crd->min_y);
 		ft_putnbr(crd->min_x);
 		ft_putstr("  ");
 		ft_putnbr(y - crd->min_y);
-		ft_putnbr(x - crd->min_x);
+		ft_putnbr(x - crd->min_x); */
 		return (0);
 	}
 	a = x;
@@ -121,14 +112,14 @@ int			ft_isvalid(char **tet, int y, int x, t_tet *crd)
 {
 	if (!ft_savehsh(y, x, crd, tet))
 	{
-		ft_putendl("error savehash");
+	//	ft_putendl("error savehash");
 		return (0);
 	}
 	if (x < 4 && tet[y][x + 1] == '#')
 		if (!ft_listcmp(y, x + 1, crd))
 			if (!ft_isvalid(tet, y, x + 1, crd))
 			{
-				ft_putendl("error x + 1");
+	//			ft_putendl("error x + 1");
 				return (0);
 			}
 	if (x > 0 && tet[y][x - 1] == '#')
@@ -263,16 +254,15 @@ void ft_printcoordinates(t_tet *head)
 	ft_n(1);
 	while (head)
 	{
+		ft_putendl("head loop");
 		while (i < 4)
 		{
 			ft_putnbr(head->y[i]);
 			ft_putnbr(head->x[i]);
 			i++;
 		}
-		if (head->next)
-			head = head->next;
-		else
-			break;
+		i = 0;
+		head = head->next;
 	}
 }
 
@@ -307,7 +297,6 @@ t_tet		*ft_read(int fd)
 		ft_putendl("coordinates");
 		return (NULL);
 	}
-	ft_printcoordinates(head);
 	ft_free2d(grid);
 	if (n == 21)
 		return (ft_read(fd));
@@ -332,6 +321,9 @@ int			main(int ac, char **av)
 		ft_putendl("error2");
 		return (0);
 	}
+	ft_printcoordinates(mino);
+
+	ft_putnbr(mino->y[1]);
 	i = 0;
 	return (0);
 }
