@@ -6,7 +6,7 @@
 /*   By: ksuomala <ksuomala@student.hive.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/29 17:38:50 by ksuomala          #+#    #+#             */
-/*   Updated: 2020/08/03 18:05:30 by ksuomala         ###   ########.fr       */
+/*   Updated: 2020/08/10 21:06:37 by ksuomala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,14 @@
 **	Next step would be to create functions to move my figures on the grid.
 **	We should have one grid where we draw each tetrimino and start moving them.
 **
-**	....	This input gives segfault with 3 tetriminos. On the last read read
-**	.#..	should also return 20. Our program will return error because it
-**	####	checks that read returns 21.
-**	....
+**		On the last read read should also return 20. Our program will return
+**		error because it
+**		checks that read returns 21. Check that [20] is a newline and that there is no extra nl at end of file.f
+**
+**		Put tetrimino coordinates to the upper left corner.
+**		Create smallest possible grid (sqrt(n of tet * 4).
+**		Place A to the most upper left position.
+** 		Move B to the right side of A. If it doesn't fit, increment y.
 */
 
 t_tet		*ft_createnode(t_tet *head)
@@ -62,9 +66,12 @@ int			ft_listcmp(int y, int x, t_tet *crd)
 	i = 0;
 	while (i < 4)
 	{
-		if (crd->x[i] == x && crd->y[i] == y)
+		if (crd->x[i] == (x - crd->min_x) && crd->y[i] == (y - crd->min_y))
 		{
-			ft_putendl("already saved");
+			ft_putstr("already saved ");
+			ft_putnbr(y);
+			ft_putnbr(x);
+			ft_n(1);
 			return (1);
 		}
 		i++;
@@ -72,39 +79,80 @@ int			ft_listcmp(int y, int x, t_tet *crd)
 	return (0);
 }
 
-int			ft_savehsh(int y, int x, t_tet *crd)
+int			ft_savehsh(int y, int x, t_tet *crd, char **tet)
 {
 	int i;
+	int a;
 
+	ft_putstr("savehsh");
+	ft_putnbr(y);
+	ft_putnbr(x);
+	if (crd->count)
+	{
+		ft_putnbr(crd->min_y);
+		ft_putnbr(crd->min_x);
+	}
+	ft_n(1);
 	i = crd->count;
 	if (i > 3)
+	{
+		ft_putnbr(crd->min_y);
+		ft_putnbr(crd->min_x);
+		ft_putstr("  ");
+		ft_putnbr(y - crd->min_y);
+		ft_putnbr(x - crd->min_x);
 		return (0);
-	crd->y[i] = y;
-	crd->x[i] = x;
+	}
+	a = x;
+	if (i == 0)
+	{
+		crd->min_y = y;
+		while (tet[y + 1][a - 1] == '#')
+			a--;
+		crd->min_x = a;
+	}
+	crd->y[i] = y - crd->min_y;
+	crd->x[i] = x - crd->min_x;
 	crd->count++;
 	return (1);
 }
 
 int			ft_isvalid(char **tet, int y, int x, t_tet *crd)
 {
-	if (!ft_savehsh(y, x, crd))
+	if (!ft_savehsh(y, x, crd, tet))
+	{
+		ft_putendl("error savehash");
 		return (0);
+	}
 	if (x < 4 && tet[y][x + 1] == '#')
 		if (!ft_listcmp(y, x + 1, crd))
 			if (!ft_isvalid(tet, y, x + 1, crd))
+			{
+				ft_putendl("error x + 1");
 				return (0);
+			}
 	if (x > 0 && tet[y][x - 1] == '#')
 		if (!ft_listcmp(y, x - 1, crd))
 			if (!ft_isvalid(tet, y, x - 1, crd))
+			{
+				ft_putendl("error x - 1");
 				return (0);
+			}
 	if (y > 3 && tet[y - 1][x] == '#')
 		if (!ft_listcmp(y - 1, x, crd))
 			if (!ft_isvalid(tet, y - 1, x, crd))
+			{
+				ft_putendl("error y - 1");
 				return (0);
+			}
 	if (y < 3 && tet[y + 1][x] == '#')
 		if (!ft_listcmp(y + 1, x, crd))
 			if (!ft_isvalid(tet, y + 1, x, crd))
+			{
+				ft_putendl("error y + 1");
 				return (0);
+			}
+	ft_putendl("return isvalid");
 	return (1);
 }
 
@@ -114,6 +162,7 @@ int			ft_hashcount(char **arr, t_tet *head)
 	int y;
 	int count;
 
+	ft_putendl("hshcount");
 	while (head->next)
 		head = head->next;
 	if (head->count != 4)
@@ -154,8 +203,13 @@ t_tet		*ft_coordinates(char **tet, t_tet *head)
 		while (x < 4)
 		{
 			if (tet[y][x] == '#')
+			{
 				if (ft_isvalid(tet, y, x, last))
+				{
+					ft_putendl("isvalid");
 					break ;
+				}
+			}
 			x++;
 		}
 		x = 0;
@@ -166,22 +220,22 @@ t_tet		*ft_coordinates(char **tet, t_tet *head)
 	return (NULL);
 }
 
-int			ft_istet(char *s)
+int			ft_istet(char *line, int n)
 {
 	int i;
 
 	i = 0;
-	while (i < 4)
+	if ((n != 21 && n != 20) || line[4] != '\n' || line[9] != '\n'\
+	|| line[14] != '\n' || line[19] != '\n')
+		return (0);
+	if (n == 21 && line[20] != '\n')
+		return (0);
+	while (i < n)
 	{
-		if (s[i] != '#' && s[i] != '.')
-		{
-			ft_putendl("wrong char");
+		if (line[i] != '#' && line[i] != '.' && line[i] != '\n')
 			return (0);
-		}
 		i++;
 	}
-	if (s[i] != '\n')
-		return (0);
 	return (1);
 }
 
@@ -199,34 +253,67 @@ void		ft_free2d(char **arr)
 	ft_putendl("FREED");
 }
 
+void ft_printcoordinates(t_tet *head)
+{
+	int i;
+
+	i = 0;
+	ft_putstr("y[3] = ");
+	ft_putnbr(head->y[3]);
+	ft_n(1);
+	while (head)
+	{
+		while (i < 4)
+		{
+			ft_putnbr(head->y[i]);
+			ft_putnbr(head->x[i]);
+			i++;
+		}
+		if (head->next)
+			head = head->next;
+		else
+			break;
+	}
+}
+
+
 t_tet		*ft_read(int fd)
 {
 	int				i;
 	int				n;
+	int				sub;
 	char			line[21];
 	char			**grid;
 	static t_tet	*head;
 
 	grid = (char**)malloc(sizeof(char*) * 4);
 	i = 0;
-	if (!(n = read(fd, &line, 21)))
-		return (head);
-	if ((n != 21 && n != 20) || line[4] != '\n' || line[9] != '\n'\
-	|| line[14] != '\n' || line[19] != '\n')
+	n = read(fd, &line, 21);
+	if (n < 20 || !ft_istet(line, n))
+	{
+		ft_putstr("n20 or !ftistet\n");
 		return (NULL);
+	}
 	line[19] = '\0';
-	n = 0;
+	sub = 0;
 	while (i < 4)
 	{
-		grid[i] = ft_strsub(line, n, 5);
-		n = n + 5;
+		grid[i] = ft_strsub(line, sub, 5);
+		sub = sub + 5;
 		i++;
 	}
 	if (!(head = ft_coordinates(grid, head)))
+	{
+		ft_putendl("coordinates");
 		return (NULL);
+	}
+	ft_printcoordinates(head);
 	ft_free2d(grid);
-	return (ft_read(fd));
+	if (n == 21)
+		return (ft_read(fd));
+	return (head);
 }
+
 
 int			main(int ac, char **av)
 {
@@ -236,23 +323,15 @@ int			main(int ac, char **av)
 
 	if (ac != 2)
 	{
-		ft_putendl("error");
+		ft_putendl("error1");
 		return (0);
 	}
 	fd = open(av[1], O_RDONLY);
 	if (!(mino = ft_read(fd)))
 	{
-		ft_putendl("error");
+		ft_putendl("error2");
 		return (0);
 	}
-	ft_putchar(mino->print);
-	ft_putchar(mino->next->print);
-	ft_putchar(mino->next->next->print);
-	ft_putchar(mino->next->next->next->print);
-	ft_putnbr(mino->y[1]);
-	ft_putnbr(mino->next->y[1]);
-	ft_putnbr(mino->next->next->y[1]);
-	ft_putnbr(mino->next->next->next->y[1]);
 	i = 0;
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: ksuomala <ksuomala@student.hive.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/03 16:50:03 by ksuomala          #+#    #+#             */
-/*   Updated: 2020/08/03 16:50:45 by ksuomala         ###   ########.fr       */
+/*   Updated: 2020/08/10 19:29:35 by ksuomala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 typedef struct		s_tet
 {
 	char			print;
+	int				min_x;
+	int				min_y;
 	int				count;
 	int				x[4];
 	int				y[4];

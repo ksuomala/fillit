@@ -6,7 +6,7 @@
 #    By: ksuomala <ksuomala@student.hive.com>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/07/29 17:09:53 by ksuomala          #+#    #+#              #
-#    Updated: 2020/07/30 18:00:33 by ksuomala         ###   ########.fr        #
+#    Updated: 2020/08/10 20:09:14 by ksuomala         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -40,3 +40,6 @@ re: fclean $(NAME)
 
 $(LIB):
 	make -C libft/
+
+lldb: $(OBJS)
+	gcc -Wall -Werror -Wextra -g -o $(NAME) $(OBJS) $(LIB)
