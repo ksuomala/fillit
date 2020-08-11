@@ -6,11 +6,11 @@
 #    By: ksuomala <ksuomala@student.hive.com>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/07/29 17:09:53 by ksuomala          #+#    #+#              #
-#    Updated: 2020/08/10 20:09:14 by ksuomala         ###   ########.fr        #
+#    Updated: 2020/08/11 16:19:21 by ksuomala         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SRCS = main.c
+SRCS = main.c ft_get_grid.c backtracker.c
 
 NAME = fillit
 

@@ -6,7 +6,7 @@
 /*   By: ksuomala <ksuomala@student.hive.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/29 17:38:50 by ksuomala          #+#    #+#             */
-/*   Updated: 2020/08/10 21:37:10 by ksuomala         ###   ########.fr       */
+/*   Updated: 2020/08/11 17:34:14 by ksuomala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,14 @@ t_tet		*ft_createnode(t_tet *head)
 		{
 			temp = temp->next;
 			i++;
+			ft_putchar('+');
 		}
 		temp->next = new;
+	}
+	if (i > 25)
+	{
+		ft_putendl("too many tet");
+		return (NULL);
 	}
 	new->print = 'A' + i;
 	new->count = 0;
@@ -185,7 +191,8 @@ t_tet		*ft_coordinates(char **tet, t_tet *head)
 
 	x = 0;
 	y = 0;
-	head = ft_createnode(head);
+	if(!(head = ft_createnode(head)))
+		return (NULL);
 	last = head;
 	while (last->next)
 		last = last->next;
@@ -196,19 +203,16 @@ t_tet		*ft_coordinates(char **tet, t_tet *head)
 			if (tet[y][x] == '#')
 			{
 				if (ft_isvalid(tet, y, x, last))
-				{
-					ft_putendl("isvalid");
 					break ;
-				}
 			}
 			x++;
 		}
 		x = 0;
 		y++;
 	}
-	if (ft_hashcount(tet, head))
-		return (head);
-	return (NULL);
+	if (!ft_hashcount(tet, head) || !head)
+		return (NULL);
+	return (head);
 }
 
 int			ft_istet(char *line, int n)
@@ -321,9 +325,14 @@ int			main(int ac, char **av)
 		ft_putendl("error2");
 		return (0);
 	}
-	ft_printcoordinates(mino);
+//	ft_printcoordinates(mino);
 
-	ft_putnbr(mino->y[1]);
+//	test = ft_get_grid(mino);
+//	ft_print_grid(test);
+//	ft_putstr("A3 = ");
+	ft_putnbr(ft_lstsize(mino));
+	ft_n(1);
+	ft_resolution(mino);
 	i = 0;
 	return (0);
 }
