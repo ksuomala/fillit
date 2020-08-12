@@ -6,7 +6,7 @@
 /*   By: ksuomala <ksuomala@student.hive.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/11 13:28:04 by ksuomala          #+#    #+#             */
-/*   Updated: 2020/08/11 19:43:15 by ksuomala         ###   ########.fr       */
+/*   Updated: 2020/08/12 18:01:31 by ksuomala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ char **ft_create_test_grid(size_t side)
 	{
 		if ((!(test_grid[n] = (char *)malloc(sizeof(char) * (side + 1)))))
 			return (NULL);
-		test_grid[n][side + 1] = '\0';
+		test_grid[n][side] = '\0';
 		ft_memset(test_grid[n], '.', side);
 		n++;
 	}
@@ -66,7 +66,7 @@ char **ft_get_grid(t_tet *head)
 	ft_putnbr(i);
 	ft_n(1);
 	tet_count = ft_lstsize(head);
-	if (side == 0)
+	if (i == 1)
 		side = ft_count_side(tet_count * 4);
 	ft_putnbr(side);
 	if (i > 1)

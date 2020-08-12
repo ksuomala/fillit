@@ -6,7 +6,7 @@
 /*   By: ksuomala <ksuomala@student.hive.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/11 13:47:58 by ksuomala          #+#    #+#             */
-/*   Updated: 2020/08/12 14:35:27 by ksuomala         ###   ########.fr       */
+/*   Updated: 2020/08/12 18:06:26 by ksuomala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,10 +80,14 @@ t_tet	*ft_check_print(t_tet *head, char **grid, size_t side)
 {
 	size_t y;
 
-//	ft_putendl("checking print");
+	ft_putendl("checking print");
 	y = 0;
+	ft_print_grid(grid);
 	while (y < side && head)
 	{
+		ft_putendl("segg");
+		ft_putchar(head->print);
+		ft_putnbr(y);
 		if (ft_strchr(grid[y], head->print))
 		{
 			head = head->next;
@@ -91,9 +95,9 @@ t_tet	*ft_check_print(t_tet *head, char **grid, size_t side)
 		}
 		y++;
 	}
-//	ft_putendl("+");
-//	if (!head)
-//		ft_putendl("head is null");
+	ft_putendl("+");
+	if (!head)
+		ft_putendl("head is null");
 	return (head);
 }
 
@@ -105,15 +109,20 @@ t_tet	*ft_check_print(t_tet *head, char **grid, size_t side)
 
 int ft_backtracker(t_tet *head, char **grid)
 {
-	size_t	y;
-	size_t	x;
-	size_t	side;
+	int		y;
+	int		x;
+	int		side;
 	t_tet	*c;
 	t_tet	*temp;
 
 	ft_putendl("backtracker");
 	side = ft_strlen(grid[0]);
+	ft_putendl("222");
 	temp = ft_check_print(head, grid, side);
+	ft_putendl("11111");
+//	ft_putstr("head print = ");
+//	ft_putchar(head->print);
+//	ft_n(1);
 	if (!temp)
 		return (1);
 	y = 0;
@@ -125,18 +134,17 @@ int ft_backtracker(t_tet *head, char **grid)
 //			ft_putnbr(ft_fit_tet(head, grid, y, x));
 			if (ft_fit_tet(temp, grid, y, x))
 			{
-				ft_putstr("fit tet ");
+//				ft_putstr("fit tet ");
 				ft_save_tet(temp, grid, y, x);
 				//					ft_print_grid(grid);
 				if (ft_backtracker(head, grid))
 					return (1);
 				c = temp;
-				if ((temp = ft_check_print(temp, grid, side)) == NULL)
-					return (1);
+//				if ((temp = ft_check_print(temp, grid, side)) == NULL)
+//					return (0);
 				ft_rem_char(c, grid, y, x);
-				x = 0;
-				y = 0;
-				break ;
+//				x = -1;
+//				y = -1;
 			}
 			x++;
 		}
