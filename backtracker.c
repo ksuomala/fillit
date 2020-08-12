@@ -6,7 +6,7 @@
 /*   By: ksuomala <ksuomala@student.hive.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/11 13:47:58 by ksuomala          #+#    #+#             */
-/*   Updated: 2020/08/12 18:06:26 by ksuomala         ###   ########.fr       */
+/*   Updated: 2020/08/12 18:23:21 by ksuomala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int ft_fit_tet(t_tet *head, char **grid, size_t y, size_t x)
 		//		ft_putendl("error at [3]");
 		return (0);
 	}
-	ft_n(1);
+
 	return (1);
 }
 
@@ -80,14 +80,14 @@ t_tet	*ft_check_print(t_tet *head, char **grid, size_t side)
 {
 	size_t y;
 
-	ft_putendl("checking print");
+//	ft_putendl("checking print");
 	y = 0;
-	ft_print_grid(grid);
+//	ft_print_grid(grid);
 	while (y < side && head)
 	{
-		ft_putendl("segg");
-		ft_putchar(head->print);
-		ft_putnbr(y);
+//		ft_putendl("segg");
+//		ft_putchar(head->print);
+//		ft_putnbr(y);
 		if (ft_strchr(grid[y], head->print))
 		{
 			head = head->next;
@@ -95,9 +95,9 @@ t_tet	*ft_check_print(t_tet *head, char **grid, size_t side)
 		}
 		y++;
 	}
-	ft_putendl("+");
-	if (!head)
-		ft_putendl("head is null");
+//	ft_putendl("+");
+//	if (!head)
+//		ft_putendl("head is null");
 	return (head);
 }
 
@@ -115,11 +115,11 @@ int ft_backtracker(t_tet *head, char **grid)
 	t_tet	*c;
 	t_tet	*temp;
 
-	ft_putendl("backtracker");
+//	ft_putendl("backtracker");
 	side = ft_strlen(grid[0]);
-	ft_putendl("222");
+//	ft_putendl("222");
 	temp = ft_check_print(head, grid, side);
-	ft_putendl("11111");
+//	ft_putendl("11111");
 //	ft_putstr("head print = ");
 //	ft_putchar(head->print);
 //	ft_n(1);
@@ -150,7 +150,7 @@ int ft_backtracker(t_tet *head, char **grid)
 		}
 		x = 0;
 		y++;
-		ft_putnbr(y);
+//		ft_putnbr(y);
 	}
 
 	return (0);

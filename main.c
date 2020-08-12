@@ -6,7 +6,7 @@
 /*   By: ksuomala <ksuomala@student.hive.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/29 17:38:50 by ksuomala          #+#    #+#             */
-/*   Updated: 2020/08/12 17:08:11 by ksuomala         ###   ########.fr       */
+/*   Updated: 2020/08/12 18:20:37 by ksuomala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -258,9 +258,9 @@ void ft_printcoordinates(t_tet *head)
 	int i;
 
 	i = 0;
-	ft_putstr("y[3] = ");
-	ft_putnbr(head->y[3]);
-	ft_n(1);
+//	ft_putstr("y[3] = ");
+//	ft_putnbr(head->y[3]);
+//	ft_n(1);
 	while (head)
 	{
 //		ft_putendl("head loop");
@@ -340,7 +340,7 @@ int			main(int ac, char **av)
 //	ft_print_grid(test);
 //	ft_putstr("A3 = ");
 //	ft_putnbr(ft_lstsize(mino));
-	ft_n(1);
+//	ft_n(1);
 	ft_resolution(mino);
 	i = 0;
 	return (0);
