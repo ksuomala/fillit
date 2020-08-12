@@ -6,7 +6,7 @@
 /*   By: ksuomala <ksuomala@student.hive.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/11 13:28:04 by ksuomala          #+#    #+#             */
-/*   Updated: 2020/08/11 18:48:14 by ksuomala         ###   ########.fr       */
+/*   Updated: 2020/08/11 19:43:15 by ksuomala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,9 @@ char **ft_get_grid(t_tet *head)
 	static size_t i;
 
 	i++;
+	ft_putstr("ft_get_grid i = ");
+	ft_putnbr(i);
+	ft_n(1);
 	tet_count = ft_lstsize(head);
 	if (side == 0)
 		side = ft_count_side(tet_count * 4);

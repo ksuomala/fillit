@@ -6,7 +6,7 @@
 /*   By: ksuomala <ksuomala@student.hive.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/29 17:38:50 by ksuomala          #+#    #+#             */
-/*   Updated: 2020/08/11 17:34:14 by ksuomala         ###   ########.fr       */
+/*   Updated: 2020/08/11 19:43:01 by ksuomala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,16 +203,19 @@ t_tet		*ft_coordinates(char **tet, t_tet *head)
 			if (tet[y][x] == '#')
 			{
 				if (ft_isvalid(tet, y, x, last))
+				{
+					y = 4;
 					break ;
+				}
 			}
 			x++;
 		}
 		x = 0;
 		y++;
 	}
-	if (!ft_hashcount(tet, head) || !head)
-		return (NULL);
-	return (head);
+	if (ft_hashcount(tet, head))
+		return (head);
+	return (NULL);
 }
 
 int			ft_istet(char *line, int n)
@@ -330,7 +333,7 @@ int			main(int ac, char **av)
 //	test = ft_get_grid(mino);
 //	ft_print_grid(test);
 //	ft_putstr("A3 = ");
-	ft_putnbr(ft_lstsize(mino));
+//	ft_putnbr(ft_lstsize(mino));
 	ft_n(1);
 	ft_resolution(mino);
 	i = 0;
