@@ -6,7 +6,7 @@
 /*   By: ksuomala <ksuomala@student.hive.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/29 17:38:50 by ksuomala          #+#    #+#             */
-/*   Updated: 2020/08/12 18:20:37 by ksuomala         ###   ########.fr       */
+/*   Updated: 2020/08/13 16:12:25 by ksuomala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,37 +32,26 @@
 **		while (x != .) >> x++; , if ((x[i] + x) == .)
 */
 
-
-
 t_tet		*ft_createnode(t_tet *head)
 {
 	t_tet	*temp;
 	t_tet	*new;
 	int		i;
-
-	i = 0;
-	if (!(new = (t_tet*)malloc(sizeof(t_tet))))
+	if (!(new = (t_tet *)malloc(sizeof(t_tet))))
 		return (NULL);
 	if (!head)
 		head = new;
 	else
 	{
-		i++;
 		temp = head;
 		while (temp->next)
-		{
 			temp = temp->next;
-			i++;
-//			ft_putchar('+');
-		}
 		temp->next = new;
 	}
-	if (i > 25)
-	{
-		ft_putendl("too many tet");
+	i = ft_lstsize(head);
+	if (i > 26)
 		return (NULL);
-	}
-	new->print = 'A' + i;
+	new->print = 'A' + i - 1;
 	new->count = 0;
 	new->next = NULL;
 	return (head);
@@ -76,9 +65,7 @@ int			ft_listcmp(int y, int x, t_tet *crd)
 	while (i < 4)
 	{
 		if (crd->x[i] == (x - crd->min_x) && crd->y[i] == (y - crd->min_y))
-		{
 			return (1);
-		}
 		i++;
 	}
 	return (0);
@@ -86,21 +73,12 @@ int			ft_listcmp(int y, int x, t_tet *crd)
 
 int			ft_savehsh(int y, int x, t_tet *crd, char **tet)
 {
-	int i;
-	int a;
+	int	i;
+	int	a;
 
-//	ft_putendl("saving hash");
 	i = crd->count;
 	if (i > 3)
-	{
-/*		ft_putnbr(crd->min_y);
-		ft_putnbr(crd->min_x);
-		ft_putstr("  ");
-		ft_putnbr(y - crd->min_y);
-		ft_putnbr(x - crd->min_x); */
 		return (0);
-	}
-//	ft_putendl("here");
 	a = x;
 	if (i == 0)
 	{
@@ -115,52 +93,35 @@ int			ft_savehsh(int y, int x, t_tet *crd, char **tet)
 	return (1);
 }
 
-int			ft_isvalid(char **tet, int y, int x, t_tet *crd)
+int		ft_isvalid(char **tet, int y, int x, t_tet *crd)
 {
 	if (!ft_savehsh(y, x, crd, tet))
-	{
-//		ft_putendl("error savehash");
 		return (0);
-	}
 	if (x < 4 && tet[y][x + 1] == '#')
 		if (!ft_listcmp(y, x + 1, crd))
 			if (!ft_isvalid(tet, y, x + 1, crd))
-			{
-//				ft_putendl("error x + 1");
 				return (0);
-			}
 	if (x > 0 && tet[y][x - 1] == '#')
 		if (!ft_listcmp(y, x - 1, crd))
 			if (!ft_isvalid(tet, y, x - 1, crd))
-			{
-//				ft_putendl("error x - 1");
 				return (0);
-			}
 	if (y > 3 && tet[y - 1][x] == '#')
 		if (!ft_listcmp(y - 1, x, crd))
 			if (!ft_isvalid(tet, y - 1, x, crd))
-			{
-//				ft_putendl("error y - 1");
 				return (0);
-			}
 	if (y < 3 && tet[y + 1][x] == '#')
 		if (!ft_listcmp(y + 1, x, crd))
 			if (!ft_isvalid(tet, y + 1, x, crd))
-			{
-//				ft_putendl("error y + 1");
 				return (0);
-			}
-//	ft_putendl("return isvalid");
 	return (1);
 }
 
-int			ft_hashcount(char **arr, t_tet *head)
+int		ft_hashcount(char **arr, t_tet *head)
 {
 	int x;
 	int y;
 	int count;
 
-//	ft_putendl("hshcount");
 	while (head->next)
 		head = head->next;
 	if (head->count != 4)
@@ -184,15 +145,27 @@ int			ft_hashcount(char **arr, t_tet *head)
 	return (1);
 }
 
-t_tet		*ft_coordinates(char **tet, t_tet *head)
+int	ft_findhsh(char *s)
 {
-	t_tet		*last;
-	size_t		x;
-	size_t		y;
+	int i;
+
+	i = 0;
+	while(s[i] != '#' && s[i])
+		i++;
+	if (!s[i])
+		return (-1);
+	return (i);
+}
+
+t_tet	*ft_coordinates(char **tet, t_tet *head)
+{
+	t_tet	*last;
+	size_t	x;
+	size_t	y;
 
 	x = 0;
 	y = 0;
-	if(!(head = ft_createnode(head)))
+	if (!(head = ft_createnode(head)))
 		return (NULL);
 	last = head;
 	while (last->next)
@@ -203,11 +176,10 @@ t_tet		*ft_coordinates(char **tet, t_tet *head)
 		{
 			if (tet[y][x] == '#')
 			{
-//				ft_putendl("found hash");
 				if (ft_isvalid(tet, y, x, last))
 				{
 					y = 4;
-					break ;
+					break;
 				}
 			}
 			x++;
@@ -220,13 +192,12 @@ t_tet		*ft_coordinates(char **tet, t_tet *head)
 	return (NULL);
 }
 
-int			ft_istet(char *line, int n)
+int		ft_istet(char *line, int n)
 {
 	int i;
 
 	i = 0;
-	if ((n != 21 && n != 20) || line[4] != '\n' || line[9] != '\n'\
-	|| line[14] != '\n' || line[19] != '\n')
+	if ((n != 21 && n != 20) || line[4] != '\n' || line[9] != '\n' || line[14] != '\n' || line[19] != '\n')
 		return (0);
 	if (n == 21 && line[20] != '\n')
 		return (0);
@@ -239,31 +210,26 @@ int			ft_istet(char *line, int n)
 	return (1);
 }
 
-void		ft_free2d(char **arr)
+void	ft_free2d(char **arr)
 {
 	int i;
 
 	i = 0;
-	while (i < 4)
+	while (arr[i])
 	{
 		free(arr[i]);
 		i++;
 	}
 	free(arr);
-//	ft_putendl("FREED");
 }
 
-void ft_printcoordinates(t_tet *head)
+void	ft_printcoordinates(t_tet *head)
 {
 	int i;
 
 	i = 0;
-//	ft_putstr("y[3] = ");
-//	ft_putnbr(head->y[3]);
-//	ft_n(1);
 	while (head)
 	{
-//		ft_putendl("head loop");
 		while (i < 4)
 		{
 			ft_putnbr(head->y[i]);
@@ -275,73 +241,101 @@ void ft_printcoordinates(t_tet *head)
 	}
 }
 
-
-t_tet		*ft_read(int fd)
+char **ft_tet_grid(char *line)
 {
-	int				i;
-	int				n;
-	int				sub;
-	char			line[21];
-	char			**grid;
-	static t_tet	*head;
+	char		**tet;
+	int	i;
+	int			sub;
 
-	grid = (char**)malloc(sizeof(char*) * 4);
 	i = 0;
-	n = read(fd, &line, 21);
-	if (n < 20 || !ft_istet(line, n))
-	{
-		ft_putstr("n20 or !ftistet\n");
-		return (NULL);
-	}
-	line[19] = '\0';
 	sub = 0;
+	tet = (char **)malloc(sizeof(char *) * 4 + 1);
+	tet[4] = NULL;
 	while (i < 4)
 	{
-		grid[i] = ft_strsub(line, sub, 5);
+		tet[i] = ft_strsub(line, sub, 5);
 		sub = sub + 5;
 		i++;
 	}
-	ft_putendl("before coordinates");
-	if (!(head = ft_coordinates(grid, head)))
+	return (tet);
+}
+
+/*
+**	If it's a square or a straight line, shape == 1. If all shapes are sq, or all shapes are line,
+**	return 1. Otherwise return 0.
+*/
+
+int	ft_shapecmp(t_tet *head)
+{
+	while (head->next->next && head->shape == head->next->shape)
+		head = head->next;
+	return (head->shape - head->next->shape);
+}
+
+int	ft_shape(t_tet *head)
+{
+	t_tet	*temp;
+
+	temp = head;
+	while(temp)
 	{
-//		ft_putendl("coordinates");
+		if (temp->x[0] == 0 && temp->x[1] == 1 && temp->x[2] == 1 && temp->x[3]\
+		== 0 && temp->y[0] == 0 && temp->y[1] == 0 && temp->y[2] == 1 &&\
+		temp->y[3] == 1)
+			temp->shape = 1;
+		else if (temp->x[0] == 0 && temp->x[1] == 0 && temp->x[2] == 0 && temp->x[3]\
+		== 0 && temp->y[0] == 0 && temp->y[1] == 1 && temp->y[2] == 2 &&\
+		temp->y[3] == 3)
+			temp->shape = 1;
+		else if (temp->x[0] == 0 && temp->x[1] == 1 && temp->x[2] == 2 && temp->x[3]\
+		== 3 && temp->y[0] == 0 && temp->y[1] == 0 && temp->y[2] == 0 &&\
+		temp->y[3] == 0)
+			temp->shape = 1;
+		else
+			temp->shape = 0;
+		temp = temp->next;
+	}
+	if (ft_shapecmp(head) || !head->shape)
+		return (1);
+	return (0);
+}
+
+t_tet	*ft_read(int fd, t_tet *head)
+{
+	int				n;
+	char			line[21];
+	char			**tet;
+
+	n = read(fd, &line, 21);
+	if (n < 20 || !ft_istet(line, n))
 		return (NULL);
-	}
-	ft_free2d(grid);
+	line[19] = '\0';
+	tet = ft_tet_grid(line);
+	if (!(head = ft_coordinates(tet, head)))
+		return (NULL);
+	ft_free2d(tet);
 	if (n == 21)
-	{
-//		ft_putendl("n = 21");
-		return (ft_read(fd));
-	}
+		return (ft_read(fd, head));
 	return (head);
 }
 
-
-int			main(int ac, char **av)
+int		main(int ac, char **av)
 {
-	int		i;
 	int		fd;
-	t_tet	*mino;
+	t_tet	*head;
 
+	head = NULL;
 	if (ac != 2)
 	{
-		ft_putendl("error1");
-		return (0);
+		ft_putendl("usage: ./fillit source_file");
+		exit(0);
 	}
 	fd = open(av[1], O_RDONLY);
-	if (!(mino = ft_read(fd)))
+	if (!(head = ft_read(fd, head)))
 	{
-		ft_putendl("error2");
+		ft_putendl("error");
 		return (0);
 	}
-//	ft_printcoordinates(mino);
-
-//	test = ft_get_grid(mino);
-//	ft_print_grid(test);
-//	ft_putstr("A3 = ");
-//	ft_putnbr(ft_lstsize(mino));
-//	ft_n(1);
-	ft_resolution(mino);
-	i = 0;
+	ft_resolution(head);
 	return (0);
 }
