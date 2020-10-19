@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_get_grid.c                                      :+:      :+:    :+:   */
+/*   get_grid.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ksuomala <ksuomala@student.hive.com>       +#+  +:+       +#+        */
+/*   By: jhakonie <jhakonie@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/11 13:28:04 by ksuomala          #+#    #+#             */
-/*   Updated: 2020/08/18 18:36:01 by ksuomala         ###   ########.fr       */
+/*   Updated: 2020/09/08 14:21:27 by jhakonie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,11 +36,10 @@ size_t		ft_count_side(size_t nb)
 }
 
 /*
-**	This function creates a 2-dimentional grid made of '.' chars side x side.
-**	Side is measured in ft_get_grid.
+**	This function creates a 2-dimensional grid made of '.' chars side x side.
 */
 
-char		**ft_create_test_grid(size_t side)
+char		**ft_create_grid(size_t side)
 {
 	size_t	n;
 	char	**test_grid;
@@ -52,27 +51,15 @@ char		**ft_create_test_grid(size_t side)
 	while (n < side)
 	{
 		if ((!(test_grid[n] = (char *)malloc(sizeof(char) * (side + 1)))))
+		{
+			ft_free2d(test_grid);
 			return (NULL);
+		}
 		test_grid[n][side] = '\0';
 		ft_memset(test_grid[n], '.', side);
 		n++;
 	}
 	return (test_grid);
-}
-
-char		**ft_get_grid(t_tet *head)
-{
-	size_t			tet_count;
-	static size_t	side;
-	static size_t	i;
-
-	i++;
-	tet_count = ft_lstsize(head);
-	if (i == 1)
-		side = ft_count_side(tet_count * 4);
-	if (i > 1)
-		side++;
-	return (ft_create_test_grid(side));
 }
 
 void		ft_print_grid(char **test_grid)

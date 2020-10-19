@@ -3,14 +3,47 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ksuomala <ksuomala@student.hive.com>       +#+  +:+       +#+        */
+/*   By: jhakonie <jhakonie@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/29 17:38:50 by ksuomala          #+#    #+#             */
-/*   Updated: 2020/08/18 18:26:42 by ksuomala         ###   ########.fr       */
+/*   Updated: 2020/09/08 14:19:36 by jhakonie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fillit.h"
+
+/*
+**	ft_hashcount checks that there are no hashes around the tetriminoes.
+*/
+
+int		ft_hashcount(char **arr, t_tet *head)
+{
+	int x;
+	int y;
+	int count;
+
+	while (head->next)
+		head = head->next;
+	if (head->count != 4)
+		return (0);
+	x = 0;
+	y = 0;
+	count = 0;
+	while (y < 4)
+	{
+		while (x < 4)
+		{
+			if (arr[y][x] == '#')
+				count++;
+			x++;
+		}
+		x = 0;
+		y++;
+	}
+	if (count != 4)
+		return (0);
+	return (1);
+}
 
 /*
 **	ft_findhash returns the index to the first hash found in *s.
@@ -69,17 +102,24 @@ t_tet	*ft_read(int fd, t_tet *head)
 	int				n;
 	char			line[21];
 	char			**tet;
+	t_tet			*temp;
 
+	temp = head;
 	n = read(fd, &line, 21);
 	if (n < 20 || !ft_istet(line, n))
-		return (NULL);
-	line[19] = '\0';
-	tet = ft_tet_grid(line);
+		return (ft_return_null(&temp));
+	if (!(tet = ft_tet_grid(line)))
+		return (ft_return_null(&temp));
 	if (!(head = ft_coordinates(tet, head)))
-		return (NULL);
+	{
+		ft_free2d(tet);
+		return (ft_return_null(&temp));
+	}
 	ft_free2d(tet);
 	if (n == 21)
 		return (ft_read(fd, head));
+	if (ft_lstsize(head) > 26)
+		return (ft_return_null(&temp));
 	return (head);
 }
 
@@ -87,6 +127,7 @@ int		main(int ac, char **av)
 {
 	int		fd;
 	t_tet	*head;
+	size_t	side;
 
 	head = NULL;
 	if (ac != 2)
@@ -100,6 +141,8 @@ int		main(int ac, char **av)
 		ft_putendl("error");
 		return (0);
 	}
-	ft_resolution(head);
+	side = ft_count_side(4 * ft_lstsize(head));
+	ft_resolution(head, side);
+	ft_lstfree(&head);
 	return (0);
 }

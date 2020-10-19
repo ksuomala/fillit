@@ -3,47 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   isvalid.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ksuomala <ksuomala@student.hive.com>       +#+  +:+       +#+        */
+/*   By: jhakonie <jhakonie@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/17 14:29:01 by ksuomala          #+#    #+#             */
-/*   Updated: 2020/08/18 18:32:39 by ksuomala         ###   ########.fr       */
+/*   Updated: 2020/09/08 00:46:24 by jhakonie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fillit.h"
-
-/*
-**	ft_hashcount checks that there are no hashes around the tetriminoes.
-*/
-
-int		ft_hashcount(char **arr, t_tet *head)
-{
-	int x;
-	int y;
-	int count;
-
-	while (head->next)
-		head = head->next;
-	if (head->count != 4)
-		return (0);
-	x = 0;
-	y = 0;
-	count = 0;
-	while (y < 4)
-	{
-		while (x < 4)
-		{
-			if (arr[y][x] == '#')
-				count++;
-			x++;
-		}
-		x = 0;
-		y++;
-	}
-	if (count != 4)
-		return (0);
-	return (1);
-}
 
 /*
 **	ft_istet checks that the line contains valid tetrimino characters in their
@@ -94,23 +61,32 @@ int		ft_listcmp(int y, int x, t_tet *crd)
 int		ft_savehsh(int y, int x, t_tet *crd, char **tet)
 {
 	int	i;
-	int	a;
 
 	i = crd->count;
 	if (i > 3)
 		return (0);
-	a = x;
 	if (i == 0)
-	{
-		crd->min_y = y;
-		while (y < 3 && tet[y + 1][a - 1] == '#')
-			a--;
-		crd->min_x = a;
-	}
+		ft_define_min(y, x, crd, tet);
 	crd->y[i] = y - crd->min_y;
 	crd->x[i] = x - crd->min_x;
 	crd->count++;
 	return (1);
+}
+
+void	ft_define_min(int y, int x, t_tet *crd, char **tet)
+{
+	crd->min_y = y;
+	if (y < 3 && x > 0 && tet[y + 1][x] == '#')
+	{
+		if (y < 2 && tet[y + 1][x - 1] != '#')
+			y++;
+		if (tet[y + 1][x - 1] == '#')
+		{
+			while (x > 0 && tet[y + 1][x - 1] == '#')
+				x--;
+		}
+	}
+	crd->min_x = x;
 }
 
 /*
@@ -122,17 +98,13 @@ int		ft_isvalid(char **tet, int y, int x, t_tet *crd)
 {
 	if (!ft_savehsh(y, x, crd, tet))
 		return (0);
-	if (x < 4 && tet[y][x + 1] == '#')
+	if (x < 3 && tet[y][x + 1] == '#')
 		if (!ft_listcmp(y, x + 1, crd))
 			if (!ft_isvalid(tet, y, x + 1, crd))
 				return (0);
 	if (x > 0 && tet[y][x - 1] == '#')
 		if (!ft_listcmp(y, x - 1, crd))
 			if (!ft_isvalid(tet, y, x - 1, crd))
-				return (0);
-	if (y > 3 && tet[y - 1][x] == '#')
-		if (!ft_listcmp(y - 1, x, crd))
-			if (!ft_isvalid(tet, y - 1, x, crd))
 				return (0);
 	if (y < 3 && tet[y + 1][x] == '#')
 		if (!ft_listcmp(y + 1, x, crd))

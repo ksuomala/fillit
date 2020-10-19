@@ -3,14 +3,14 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ksuomala <ksuomala@student.hive.com>       +#+  +:+       +#+         #
+#    By: jhakonie <jhakonie@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/07/29 17:09:53 by ksuomala          #+#    #+#              #
-#    Updated: 2020/08/17 16:27:57 by ksuomala         ###   ########.fr        #
+#    Updated: 2020/09/08 13:51:09 by jhakonie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SRCS = main.c ft_get_grid.c backtracker.c mod_grid.c dynamic_mem.c isvalid.c
+SRCS = main.c get_grid.c backtracker.c mod_grid.c dynamic_mem.c isvalid.c resolution.c
 
 NAME = fillit
 
