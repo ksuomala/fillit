@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   resolution.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jhakonie <jhakonie@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ksuomala <ksuomala@student.hive.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 13:52:05 by jhakonie          #+#    #+#             */
-/*   Updated: 2020/09/08 13:57:57 by jhakonie         ###   ########.fr       */
+/*   Updated: 2020/10/19 21:15:55 by ksuomala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	ft_solve_diff_shape(t_tet *head, char **test, size_t side)
 
 void	ft_solve_same_shape(t_tet *head, char **test, size_t side)
 {
-	while (!(ft_backtracker(head, test, side)))
+	while (!(ft_simple_solver(head, test, side)))
 	{
 		ft_free2d(test);
 		side++;
